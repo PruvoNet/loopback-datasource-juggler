@@ -44,4 +44,25 @@ describe('DataSource', function() {
       });
     }).should.throw(/expected test error/);
   });
+  describe('getMaxOfflineRequests', () => {
+    let ds;
+    beforeEach(() => ds = new DataSource('ds', {connector: 'memory'}));
+
+    it('sets the default maximum number of event listeners to 16', () => {
+      ds.getMaxOfflineRequests().should.be.eql(16);
+    });
+
+    it('uses provided number of listeners', () => {
+      ds.settings.maxOfflineRequests = 17;
+      ds.getMaxOfflineRequests().should.be.eql(17);
+    });
+
+    it('throws an error if a non-number is provided for the max number of listeners', () => {
+      ds.settings.maxOfflineRequests = '17';
+
+      (function() {
+        return ds.getMaxOfflineRequests();
+      }).should.throw('maxOfflineRequests must be a number');
+    });
+  });
 });
